@@ -1,0 +1,71 @@
+@font-face {
+    font-family: 'Source Code Pro';
+    src: url('/static/fonts/SourceCodePro.woff2') format('woff2');
+}
+
+* {
+    margin: 0px;
+    padding: 0px;
+    -webkit-tap-highlight-color: transparent;
+    color: white;
+    font-family: 'Source Code Pro', monospace;
+}
+
+body {
+    background: hsl(0, 1%, 17%);
+}
+
+.with-shadow {
+    text-shadow: 3px 4px 2px hsl(0, 0%, 0%);
+}
+
+.p-center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+}
+
+.center-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.txt-field {
+    border: 0px;
+    font-size: 17px;
+    padding: 3px;
+    border-radius: 3px;
+    margin: 7px;
+    color: black;
+    outline: none;
+}
+
+.error {
+    text-align: center;
+    color: rgb(194, 28, 28);
+}
+
+.btn {
+    border: 2px solid black;
+    background: white;
+    color: black;
+    padding: 3px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: 0.2s;
+}
+
+.btn:hover {
+    background: rgb(194, 194, 194);
+}
+
+.btn:active {
+    background: rgb(156, 156, 156);
+    transform: translateY(1px);
+}
