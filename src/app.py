@@ -1,14 +1,21 @@
 from flask import Flask, render_template, request
-from encryption import *
+from hashing import *
 import os
 
 DB_FILE_PATH = os.path.join(os.getcwd(), "Passwords.ejp")
 
 def readDBFile():
-    with open(DB_FILE_PATH, "rb") as fl:
-        contents = fl.read()
-        encoded= base64.b64encode(contents)
-        return encoded.decode("utf-8")
+    if (not os.path.exists(DB_FILE_PATH)):
+        return ""
+    with open(DB_FILE_PATH, "r") as fl:
+        return fl.read()
+
+def writeDBFile(data):
+    with open(DB_FILE_PATH, "w") as fl:
+        fl.write(data)
+
+def isValid(data):
+    return data and len(data) > 0
 
 app = Flask(__name__)
 
@@ -19,7 +26,7 @@ def index():
     else:
         return render_template("setkey.html")
 
-@app.route("/setkey", methods=["POST"])
+@app.route("/init", methods=["POST"])
 def setkey():
     if (authKeyExists()):
         return {
@@ -28,8 +35,9 @@ def setkey():
         }, 401
     else:
         body = request.get_json()
-        if (body["key"] and len(body["key"]) != 0):
+        if (isValid(body["key"]) and isValid(body["db"])):
             setKey(body["key"])
+            writeDBFile(body["db"])
             return { "success": True }, 200
         else:
             return {
@@ -41,21 +49,15 @@ def setkey():
 def getdb():
     if (authKeyExists()):
         body = request.get_json()
-        if (body["key"] and len(body["key"]) != 0 and verifyKey(body["key"])):
-            try:
-                return {
-                    "success": True,
-                    "db": readDBFile()
-                }, 200
-            except:
-                return {
-                    "success": False,
-                    "error": "Could not read the db file"
-                }, 200
+        if (isValid(body["key"]) and verifyKey(body["key"])):
+            return {
+                "success": True,
+                "db": readDBFile()
+            }, 200
         else:
             return {
                 "success": False,
-                "error": "Wrong fields"
+                "error": "Wrong key"
             }, 401    
     else:
         return {

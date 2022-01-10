@@ -1,28 +1,38 @@
 PetiteVue.createApp({
     authenticated: false,
-    key: "",
     error: "",
-    base64ToArrayBuffer(b64) {
-        return Uint8Array.from(atob(b64), c => c.charCodeAt(0)).buffer;
+    rawDB: null,
+    db: null,
+    getFromTextField(name) {
+        let val = window.document.querySelector(`input[name="${name}"]`).value;
+        window.document.querySelector(`input[name="${name}"]`).value = "";
+        return val;
     },
-    async authenticate(e) {
-        e.preventDefault();
-        let key = this.key;
-        this.key = "";
-        let resp = await (await fetch("/getdb", {
+    async postJSON(url, data) {
+        let resp = await fetch(url, {
             method: "POST",
-            body: JSON.stringify({ key: key }),
+            body: JSON.stringify(data),
             headers: {
                 "Content-Type": "application/json"
             }
-        })).json();
+        });
+        return await resp.json();
+    },
+    async authenticate(e) {
+        e.preventDefault();
+        let resp = await this.postJSON("/getdb", { key: btoa(this.getFromTextField("authpw")) });
         let { success, error, db } = resp;
         if (success) {
             this.authenticated = true;
-            window.db = this.base64ToArrayBuffer(db);
+            this.rawDB = db;
+            this.error = "";
         } else {
             this.error = error;
         }
-        key = "";
+    },
+    decryptDB(e) {
+        e.preventDefault();
+        this.db = JSON.parse(CryptoJS.AES.decrypt(this.rawDB, this.getFromTextField("decryptpw")).toString(CryptoJS.enc.Utf8));
+        console.log(this.db);
     }
 }).mount("#app");

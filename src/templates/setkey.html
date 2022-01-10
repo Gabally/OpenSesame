@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,6 +9,7 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔒</text></svg>">
     <title>OpenSesame | Set Key</title>
 </head>
+
 <body>
     <main id="app">
         <div class="p-center center-content">
@@ -15,13 +17,17 @@
             <div style="margin: 15px;" class="center-content">
                 <form v-on:submit="setKey" class="center-content" action="/">
                     <div>KEY NOT SET. please set a new one now:</div>
-                    <input type="password" required v-model="key" spellcheck="false" placeholder="Key" name="key" class="txt-field"  autofocus>
+                    <input type="password" spellcheck="false" placeholder="🔑" name="key" class="txt-field" autofocus>
+                    <div>DATABASE FILE NOT FOUND. please create new one with a new password:</div>
+                    <input type="password" spellcheck="false" placeholder="🔑" name="dbkey" class="txt-field">
                     <button type="submit" class="btn">OK</button>
                 </form>
             </div>
         </div>
     </main>
 </body>
+<script src="/static/vendor/crypto-js.js" type="text/javascript"></script>
 <script src="/static/vendor/petite-vue.iife.js" type="text/javascript"></script>
 <script src="/static/setkey.js" type="text/javascript"></script>
+
 </html>

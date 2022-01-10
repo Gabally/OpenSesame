@@ -42,6 +42,7 @@ body {
     margin: 7px;
     color: black;
     outline: none;
+    text-align: center;
 }
 
 .error {

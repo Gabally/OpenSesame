@@ -9,7 +9,7 @@ def hashPassword(password):
     salt = os.urandom(32) 
     key = hashlib.pbkdf2_hmac(
         "sha256",
-        password.encode("utf-8"),
+        base64.b64decode(password),
         salt,
         100000 
     )
@@ -28,7 +28,7 @@ def verifyKey(key_to_verify):
 
     new_key = hashlib.pbkdf2_hmac(
         "sha256",
-        key_to_verify.encode("utf-8"),
+        base64.b64decode(key_to_verify),
         salt, 
         100000
     )
