@@ -70,3 +70,28 @@ body {
     background: rgb(156, 156, 156);
     transform: translateY(1px);
 }
+
+.categories {
+    text-align: left;
+    padding: 3px;
+    padding-left: 10px;
+    background: rgb(82, 87, 82);
+    height: 100vh;
+    box-sizing: border-box;
+    width: 10%;
+}
+
+.category {
+    margin-top: 10px;
+}
+
+.view {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+}
+
+.entry {
+    margin-left: 10px;
+}

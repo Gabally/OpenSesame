@@ -29,12 +29,25 @@
                     <div>Key to decrypt the db:</div>
                     <form v-on:submit="decryptDB" action="/">
                         <input type="password" required spellcheck="false" placeholder="🔑" name="decryptpw" class="txt-field" autofocus>
-                        <div v-effect="$el.textContent = error" class="error"></div>
                     </form>
+                    <div v-effect="$el.textContent = error" class="error"></div>
                 </div>
             </div>
-            <div v-else>
-                <h1>DB decrypted</h1>
+            <div v-else class="view">
+                <div class="categories">
+                    <div v-for="category in Object.keys(db)" :key="category" class="category">
+                        <div v-effect="$el.textContent = category"></div>
+                        <div class="entry">
+                            <div v-for="entry in db[category]" :key="entry" v-effect="$el.textContent = entry">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h1>
+                        LOLOLOLOLOLOLL
+                    </h1>
+                </div>
             </div>
         </div>
     </main>

@@ -1,8 +1,8 @@
 PetiteVue.createApp({
-    authenticated: false,
+    authenticated: true,
     error: "",
     rawDB: null,
-    db: null,
+    db: { general: { lol: 'xd', poppo: 'pop' }, lol: { cazo: 43 } },
     getFromTextField(name) {
         let val = window.document.querySelector(`input[name="${name}"]`).value;
         window.document.querySelector(`input[name="${name}"]`).value = "";
@@ -32,7 +32,10 @@ PetiteVue.createApp({
     },
     decryptDB(e) {
         e.preventDefault();
-        this.db = JSON.parse(CryptoJS.AES.decrypt(this.rawDB, this.getFromTextField("decryptpw")).toString(CryptoJS.enc.Utf8));
-        console.log(this.db);
+        try {
+            this.db = JSON.parse(CryptoJS.AES.decrypt(this.rawDB, this.getFromTextField("decryptpw")).toString(CryptoJS.enc.Utf8));
+        } catch(e) {
+            this.error = "Could not decrypt the database";
+        }
     }
 }).mount("#app");
