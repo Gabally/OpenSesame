@@ -22,9 +22,9 @@ app = Flask(__name__)
 @app.route("/")
 def index():
     if (authKeyExists()):
-        return render_template("index.html")
+        return app.send_static_file("index.html")
     else:
-        return render_template("setkey.html")
+        return app.send_static_file("setkey.html")
 
 @app.route("/init", methods=["POST"])
 def setkey():
