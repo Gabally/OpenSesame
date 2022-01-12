@@ -1,14 +1,9 @@
-@font-face {
-    font-family: 'Source Code Pro';
-    src: url('/static/fonts/SourceCodePro.woff2') format('woff2');
-}
-
 * {
     margin: 0px;
     padding: 0px;
     -webkit-tap-highlight-color: transparent;
     color: white;
-    font-family: 'Source Code Pro', monospace;
+    font-family: Arial, sans-serif;
 }
 
 body {
@@ -51,7 +46,7 @@ body {
 }
 
 .btn {
-    border: 2px solid black;
+    border: 1px solid black;
     background: white;
     color: black;
     padding: 3px;
@@ -71,18 +66,49 @@ body {
     transform: translateY(1px);
 }
 
-.categories {
-    text-align: left;
-    padding: 3px;
-    padding-left: 10px;
+.entries {
+    text-align: center;
     background: rgb(82, 87, 82);
     height: 100vh;
+    width: 15%;
+    padding: 10px;
     box-sizing: border-box;
-    width: 10%;
+    display: flex;
+    flex-direction: column;
+    user-select: none;
 }
 
-.category {
+.entries-l::-webkit-scrollbar {
+    display: none;
+}
+
+.entries-l {
+    text-align: left;
     margin-top: 10px;
+    height: 100%;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.entry {
+    margin-top: 5px;
+    font-weight: bold;
+    background: rgba(235, 233, 233, 0.171);
+    padding: 5px;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-left: 6px;
+    transition: 0.1s;
+}
+
+.entry:hover {
+    background: rgba(158, 158, 158, 0.726);
+}
+
+.entry:active {
+    background: rgba(126, 125, 125, 0.726);
+    transform: translateY(2px);
 }
 
 .view {
@@ -92,6 +118,43 @@ body {
     align-items: center;
 }
 
-.entry {
-    margin-left: 10px;
+.search {
+    border: 0px;
+    outline: none;
+    width: 100%;
+    font-size: 16px;
+    text-align: center;
+    color: black;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    padding: 3px;
+}
+
+.expand {
+    width: 100%;
+    height: 100vh;
+}
+
+.faded {
+    opacity: 0.3;
+}
+
+.add {
+    background: white;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    font-size: 16px;
+    border: 0px;
+    padding: 2px;
+    cursor: pointer;
+    transition: 0.1s;
+}
+
+.add:hover {
+    background: rgb(230, 228, 228);
+}
+
+.add:active {
+    background: rgb(189, 188, 188);
+    transform: translateY(1px);
 }

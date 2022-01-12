@@ -34,19 +34,25 @@
                 </div>
             </div>
             <div v-else class="view">
-                <div class="categories">
-                    <div v-for="category in Object.keys(db)" :key="category" class="category">
-                        <div v-effect="$el.textContent = category"></div>
-                        <div class="entry">
-                            <div v-for="entry in db[category]" :key="entry" v-effect="$el.textContent = entry">
-                            </div>
+                <div class="entries">
+                    <div class="center-content" style="flex-direction: row;align-items: initial;">
+                        <input class="search" placeholder="🔎" spellcheck="false" type="text">
+                        <button class="add">
+                            ➕
+                        </button>
+                    </div>
+                    <div class="entries-l">
+                        <div @click="viewEntry(entry)" v-for="entry in Object.keys(db)" :key="entry" v-effect="$el.textContent = entry" class="entry">
                         </div>
                     </div>
                 </div>
-                <div>
-                    <h1>
-                        LOLOLOLOLOLOLL
-                    </h1>
+                <div class="expand center-content">
+                    <div v-if="!currentEntry" class="center-content">
+                        <h2 class="faded">No entry selected</h2>
+                    </div>
+                    <div v-else>
+
+                    </div>
                 </div>
             </div>
         </div>
