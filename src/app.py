@@ -64,6 +64,26 @@ def getdb():
             "success": False,
             "error": "The key is not set, the password db cannot be returned"
         }, 401
+
+@app.route("/updatedb", methods=["POST"])
+def updatedb():
+    if (authKeyExists()):
+        body = request.get_json()
+        if (isValid(body["key"]) and verifyKey(body["key"]) and isValid(body["db"])):
+            writeDBFile(body["db"])
+            return {
+                "success": True
+            }, 200
+        else:
+            return {
+                "success": False,
+                "error": "Wrong key"
+            }, 401    
+    else:
+        return {
+            "success": False,
+            "error": "The key is not set"
+        }, 401
     
 if (__name__ == "__main__"):
     app.run(host="0.0.0.0", port=5000, debug=True)
