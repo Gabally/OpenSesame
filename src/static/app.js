@@ -1,15 +1,6 @@
-function randomString(len, charSet) {
-    charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let randomString = '';
-    for (let i = 0; i < len; i++) {
-        let randomPoz = Math.floor(Math.random() * charSet.length);
-        randomString += charSet.substring(randomPoz, randomPoz + 1);
-    }
-    return randomString;
-}
 class ProtectedValue {
     constructor(value) {
-        this.key = CryptoJS.lib.WordArray.random(256).toString();
+        this.key = CryptoJS.lib.WordArray.random(16).toString();
         this.enc = CryptoJS.AES.encrypt(value, this.key).toString();
     }
 
@@ -18,45 +9,18 @@ class ProtectedValue {
     }
 }
 
-class Entry {
-    constructor(data) {
-        if (data) {
-            return;
-        } else {
-            this.created = Date.now();
-            this.fields = {
-                username: {
-                    type: "text",
-                    value: "mycoolusername"
-                },
-                password: {
-                    type: "protected",
-                    value: new ProtectedValue("password")
-                }
-            };
-        }
-    }
-
-    addField(newField) {
-        if (!this.fields[newField.name]) {
-            this.fields[newField.name] = newField.entry;
-        } else {
-            throw "Error: A field with that name already exists";
-        }
-    }
-}
-
 Vue.component("add-field-form", {
     props: ["submit"],
-    data: function () {
-      return {
-        type: "text",
-        name: "",
-        value: "",
-        error: "",
-        encodedFile: null,
-        MimeType: null,
-      }
+    data: function() {
+        return {
+            type: "text",
+            name: "",
+            value: "",
+            error: "",
+            encodedFile: null,
+            MimeType: null,
+            fileName: null,
+        }
     },
     methods: {
         sendData(event) {
@@ -67,7 +31,8 @@ Vue.component("add-field-form", {
                         type: this.type,
                         name: this.name,
                         MimeType: this.MimeType,
-                        value: this.encodedFile
+                        value: this.encodedFile,
+                        fileName: this.fileName
                     });
                 } else {
                     this.submit({
@@ -84,20 +49,21 @@ Vue.component("add-field-form", {
         },
         setError(e) {
             this.error = e;
-            setTimeout(()=>{
+            setTimeout(() => {
                 this.error = "";
             }, 5000);
         },
         encodeFile() {
             let file = this.$refs.rawFile.files[0];
+            this.fileName = file.name;
             this.MimeType = file.type;
             let reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = () => {
-              this.encodedFile = reader.result;
+                this.encodedFile = reader.result;
             };
             reader.onerror = (error) => {
-              console.error("Error: ", error);
+                console.error("Error: ", error);
             };
         }
     },
@@ -124,54 +90,30 @@ Vue.component("add-field-form", {
     `
 });
 
-var app = new Vue({
+new Vue({
     el: "#app",
     data: {
-        authenticated: true,
+        authenticated: false,
         error: "",
         rawDB: null,
         showAddFieldMenu: false,
-        db: { lol: {
-            created: new Date(),
-            fields: {
-                username: {
-                    type: "text",
-                    value: "mycoolusername"
-                },
-                password: {
-                    type: "protected",
-                    value: btoa("ljshdjsdg")
-                }
-            }
-        }, poppo: {
-            created: new Date(),
-            fields: {
-                username: {
-                    type: "text",
-                    value: "mycoolusername"
-                },
-                password: {
-                    type: "protected",
-                    value: btoa("ljshdjsdg")
-                }
-            }
-        },
-         dsfsdf: {
-            created: new Date(),
-            fields: {
-                username: {
-                    type: "text",
-                    value: "mycoolusername"
-                },
-                password: {
-                    type: "protected",
-                    value: btoa("ljshdjsdg")
-                }
-            }
-        } },
-        currentEntry: null
+        db: null,
+        currentEntry: null,
+        encPassword: null,
     },
     methods: {
+        randomString(len, charSet) {
+            charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let randomString = '';
+            for (let i = 0; i < len; i++) {
+                let randomPoz = Math.floor(Math.random() * charSet.length);
+                randomString += charSet.substring(randomPoz, randomPoz + 1);
+            }
+            return randomString;
+        },
+        formatTimestamp(date) {
+            return `${date.getHours()}:${date.getMinutes()} ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+        },
         getFromTextField(name) {
             let val = window.document.querySelector(`input[name="${name}"]`).value;
             window.document.querySelector(`input[name="${name}"]`).value = "";
@@ -199,6 +141,11 @@ var app = new Vue({
                 this.error = error;
             }
         },
+        async updateDB() {
+            let serialized = JSON.stringify(this.db);
+            let encrypted = CryptoJS.AES.encrypt(serialized, ).toString();
+            let resp = await this.postJSON("/updatedb", {});
+        },
         viewEntry(name) {
             this.currentEntry = name;
         },
@@ -214,7 +161,7 @@ var app = new Vue({
             };
         },
         addEntry() {
-            let name = `New Entry #${randomString(5)}`;
+            let name = `New Entry #${this.randomString(5)}`;
             if (this.db[name]) {
                 alert(`An entry with the name ${name} already exists`);
                 return;
@@ -237,7 +184,7 @@ var app = new Vue({
         updateEntryName(event) {
             let newName = event.target.value;
             if (newName && !this.db[newName]) {
-                this.db[newName] = { ...this.db[this.currentEntry] };
+                this.db[newName] = {...this.db[this.currentEntry] };
                 delete this.db[this.currentEntry];
                 this.currentEntry = newName;
             }
@@ -250,7 +197,13 @@ var app = new Vue({
                     this.db[this.currentEntry].fields[eventData.name] = {
                         type: eventData.type,
                         MimeType: eventData.MimeType,
-                        value: eventData.value
+                        value: eventData.value,
+                        fileName: eventData.fileName
+                    };
+                } else if (eventData.type == "protected") {
+                    this.db[this.currentEntry].fields[eventData.name] = {
+                        type: eventData.type,
+                        value: btoa(eventData.value)
                     };
                 } else {
                     this.db[this.currentEntry].fields[eventData.name] = {
@@ -270,13 +223,25 @@ var app = new Vue({
         decryptDB(e) {
             e.preventDefault();
             try {
-                this.db = JSON.parse(CryptoJS.AES.decrypt(this.rawDB, this.getFromTextField("decryptpw")).toString(CryptoJS.enc.Utf8));
+                this.encPassword = new ProtectedValue(this.getFromTextField("decryptpw"));
+                this.db = JSON.parse(CryptoJS.AES.decrypt(this.rawDB, this.encPassword.get()).toString(CryptoJS.enc.Utf8));
             } catch (e) {
                 this.error = "Could not decrypt the database";
             }
         },
-        previewFile(file){
-            window.open(`data:${file.MimeType};base64,${file.value}`, "_blank");
+        previewFile(file) {
+            let previewWindow = window.open("about:blank", "_blank");
+            previewWindow.document.body.style.margin = "0px";
+            previewWindow.document.body.style.padding = "0px";
+            let frame = document.createElement("iframe");
+            frame.src = file.value;
+            frame.style.width = "100%";
+            frame.style.height = "100%";
+            frame.style.border = "none";
+            previewWindow.document.body.appendChild(frame);
+        },
+        copyText(text) {
+            navigator.clipboard.writeText(text);
         }
     }
 });
