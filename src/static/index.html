@@ -42,7 +42,7 @@
                         </button>
                     </div>
                     <div class="entries-l">
-                        <div @click="viewEntry(entry)" v-for="entry in Object.keys(db)" class="entry">
+                        <div @click="viewEntry(entry)" v-for="(index,entry) in db" class="entry">
                             {{ entry }}
                         </div>
                     </div>
@@ -55,15 +55,34 @@
                         <div class="entry-details">
                             <div class="center-content r-flex" style="justify-content: space-between;">
                                 <div>&nbsp;</div>
-                                <input class=" invisible-input " spellcheck="false" @input="updateEntryName" type="text " v-model="currentEntry.name">
-                                <button class="btn del-btn" @click="deleteEntry(currentEntry.name)">
+                                <input class=" invisible-input" spellcheck="false" @change="updateEntryName" type="text " :value="currentEntry">
+                                <button class="btn del-btn" @click="deleteEntry(currentEntry)">
                                     🗑️
                                 </button>
                             </div>
                             <hr>
-                            <div v-for="field in Object.keys(currentEntry.entry.fields) " class="field-input">
-                                <label class="labolo ">{{ field }}</label>
-                                <input class="db-field " spellcheck="false " type="text " v-model="currentEntry.entry.fields[field].value ">
+                            <div v-for="(index,field) in db[currentEntry].fields" class="field-input">
+                                <div class="labolo ">{{ field }}</div>
+                                <input class="db-field" v-if="db[currentEntry].fields[field].type == 'text'" spellcheck="false " type="text" v-model="db[currentEntry].fields[field].value">
+                                <input class="db-field" v-if="db[currentEntry].fields[field].type == 'protected'" spellcheck="false " type="password" v-model="db[currentEntry].fields[field].value">
+                                <div @click="previewFile(field)" class="btn" v-if="db[currentEntry].fields[field].type == 'file'">
+                                    📁
+                                </div>
+                                <div @click="deleteField(field)" class="del-field">
+                                ❌
+                                </div>
+                            </div>
+                            <div>
+                                <h5 class="faded">Created on {{ db[currentEntry].created }}</h5>
+                            </div>
+                            <div class="center-content">
+                                <transition name="fade">
+                                <add-field-form ref="addField" v-if="showAddFieldMenu" :submit="addField"></add-field-form>
+                                </transition>
+                                <div @click="showAddFieldMenu = !showAddFieldMenu" class="expand-add">
+                                    <span v-if="showAddFieldMenu">↑</span>    
+                                    <span v-else>↓</span>
+                                </div>
                             </div>
                         </div>
                     </div>
