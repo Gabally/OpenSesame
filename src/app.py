@@ -1,36 +1,8 @@
 from datetime import datetime
-from pydoc import cli
 from flask import Flask, render_template, request
 from hashing import *
-import os, dropbox
-from datetime import datetime
-
-DB_FILE_PATH = os.path.join(os.getcwd(), "Passwords.ejp")
-DPBX_TOKEN_FILE_PATH = os.path.join(os.getcwd(), "dpbxtoken.txt")
-
-def readDBFile():
-    if (not os.path.exists(DB_FILE_PATH)):
-        return ""
-    with open(DB_FILE_PATH, "r") as fl:
-        return fl.read()
-
-def writeDBFile(data):
-    with open(DB_FILE_PATH, "w") as fl:
-        fl.write(data)
-
-def isValid(data):
-    return data and len(data) > 0
-
-def getDropBoxToken():
-    if (os.path.exists(DPBX_TOKEN_FILE_PATH)):
-        with open(DPBX_TOKEN_FILE_PATH, "r") as fl:
-            return fl.read()
-    else:
-        return None
-
-def setDropBoxToken(token):
-    with open(DPBX_TOKEN_FILE_PATH, "w") as fl:
-        fl.write(token)
+from utils import *
+import os
 
 app = Flask(__name__)
 
@@ -131,4 +103,5 @@ def updatedb():
         }, 401
     
 if (__name__ == "__main__"):
+    print("Starting server...")
     app.run(host="0.0.0.0", port=5000, debug=True)
