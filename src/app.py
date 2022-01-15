@@ -1,8 +1,12 @@
+from datetime import datetime
+from pydoc import cli
 from flask import Flask, render_template, request
 from hashing import *
-import os
+import os, dropbox
+from datetime import datetime
 
 DB_FILE_PATH = os.path.join(os.getcwd(), "Passwords.ejp")
+DPBX_TOKEN_FILE_PATH = os.path.join(os.getcwd(), "dpbxtoken.txt")
 
 def readDBFile():
     if (not os.path.exists(DB_FILE_PATH)):
@@ -16,6 +20,13 @@ def writeDBFile(data):
 
 def isValid(data):
     return data and len(data) > 0
+
+def getDropBoxToken():
+    if (os.path.exists(DPBX_TOKEN_FILE_PATH)):
+        with open(DPBX_TOKEN_FILE_PATH, "r") as fl:
+            return fl.read()
+    else:
+        return None
 
 app = Flask(__name__)
 
@@ -71,6 +82,13 @@ def updatedb():
         body = request.get_json()
         if (isValid(body["key"]) and verifyKey(body["key"]) and isValid(body["db"])):
             writeDBFile(body["db"])
+            token = getDropBoxToken()
+            if (token):
+                client = dropbox.Dropbox(token)
+                with open(DB_FILE_PATH, "rb") as f:
+                    now_timestamp = datetime.now().strftime("%m-%d-%Y-%H:%M:%S")
+                    meta = client.files_upload(f.read(), f"/Passwords-{now_timestamp}.ejp", mode=dropbox.files.WriteMode("overwrite"))
+                    print(meta)
             return {
                 "success": True
             }, 200

@@ -82,6 +82,7 @@ Vue.component("add-field-form", {
          <input v-model="value" v-if="type == 'text'" required class="db-field input-border" spellcheck="false "type="text">
          <input v-model="value" v-if="type == 'protected'" required class="db-field input-border" spellcheck="false "type="password">
          <label for="file-input" v-if="type == 'file'" class="btn">📁</label>
+         <div class="padded">{{ fileName }}</div>
          <input id="file-input" type="file" @change="encodeFile" ref="rawFile" name="uploaf" v-if="type == 'file'" style="opacity: 0;" required>
          <div class="error">{{ error }}</div>
          <button style="margin: 10px;" class="btn">➕</button>
