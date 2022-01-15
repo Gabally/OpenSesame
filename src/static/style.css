@@ -295,3 +295,17 @@ body {
     transform: translateY(1px);
     background: rgba(185, 44, 44, 0.767);
 }
+
+.notifications {
+    color: rgb(36, 36, 36);
+    font-weight: bold;
+    position: absolute;
+    bottom: 20px;
+    padding: 10px;
+    border-radius: 3px;
+    height: 20px;
+    background: rgba(250, 232, 130, 0.678);
+    left: 50%;
+    transform: translateX(-50%);
+    border: 1px solid black;
+}

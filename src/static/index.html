@@ -91,6 +91,11 @@
                         </div>
                     </div>
                 </div>
+                <transition name="fade">
+                <div v-if="notification" class="notifications center-content">
+                    {{ notification }}
+                </div>
+                </transition>
             </div>
         </div>
     </main>

@@ -94,12 +94,14 @@ new Vue({
     el: "#app",
     data: {
         authenticated: false,
+        authPassword: null,
         error: "",
         rawDB: null,
         showAddFieldMenu: false,
         db: null,
         currentEntry: null,
         encPassword: null,
+        notification: null
     },
     methods: {
         randomString(len, charSet) {
@@ -111,7 +113,8 @@ new Vue({
             }
             return randomString;
         },
-        formatTimestamp(date) {
+        formatTimestamp(timestamp) {
+            let date = new Date(timestamp);
             return `${date.getHours()}:${date.getMinutes()} ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
         },
         getFromTextField(name) {
@@ -131,20 +134,35 @@ new Vue({
         },
         async authenticate(e) {
             e.preventDefault();
-            let resp = await this.postJSON("/getdb", { key: btoa(this.getFromTextField("authpw")) });
-            let { success, error, db } = resp;
+            this.authPassword = new ProtectedValue(this.getFromTextField("authpw"));
+            let { success, error, db } = await this.postJSON("/getdb", { key: btoa(this.authPassword.get()) });
             if (success) {
                 this.authenticated = true;
                 this.rawDB = db;
                 this.error = "";
             } else {
+                this.authPassword = null;
                 this.error = error;
             }
         },
+        showNotification(txt) {
+            this.notification = txt;
+            setTimeout(() => {
+                this.notification = null;
+            }, 3000);
+        },
         async updateDB() {
             let serialized = JSON.stringify(this.db);
-            let encrypted = CryptoJS.AES.encrypt(serialized, ).toString();
-            let resp = await this.postJSON("/updatedb", {});
+            let encrypted = CryptoJS.AES.encrypt(serialized, this.encPassword.get()).toString();
+            let { success, error } = await this.postJSON("/updatedb", {
+                key: btoa(this.authPassword.get()),
+                db: encrypted
+            });
+            if (success) {
+                this.showNotification("DB Saved successfully");
+            } else {
+                alert(error);
+            }
         },
         viewEntry(name) {
             this.currentEntry = name;
@@ -159,6 +177,7 @@ new Vue({
                 delete this.db[name];
                 this.currentEntry = null;
             };
+            this.updateDB();
         },
         addEntry() {
             let name = `New Entry #${this.randomString(5)}`;
@@ -167,7 +186,7 @@ new Vue({
                 return;
             }
             this.db[name] = {
-                created: new Date(),
+                created: new Date().getTime(),
                 fields: {
                     username: {
                         type: "text",
@@ -180,6 +199,7 @@ new Vue({
                 }
             };
             this.currentEntry = name;
+            this.updateDB();
         },
         updateEntryName(event) {
             let newName = event.target.value;
@@ -187,6 +207,7 @@ new Vue({
                 this.db[newName] = {...this.db[this.currentEntry] };
                 delete this.db[this.currentEntry];
                 this.currentEntry = newName;
+                this.updateDB();
             }
         },
         addField(eventData) {
@@ -212,12 +233,14 @@ new Vue({
                     };
                 }
                 this.forceFieldRender();
+                this.updateDB();
             }
         },
         deleteField(name) {
             if (confirm(`Are you sure you want to delete the field ${name} ?`)) {
                 delete this.db[this.currentEntry].fields[name];
                 this.forceFieldRender();
+                this.updateDB();
             }
         },
         decryptDB(e) {
