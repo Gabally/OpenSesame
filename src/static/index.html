@@ -14,7 +14,7 @@
     <main id="app">
         <div v-if="!authenticated" class="p-center center-content">
             <h1 class="with-shadow">OpenSesame 🔒</h1>
-            <div style="margin: 15px;" class="center-content">
+            <div class="center-content spaced">
                 <div>Please authenticate yourself:</div>
                 <form v-on:submit="authenticate" action="/">
                     <input type="password" required spellcheck="false" placeholder="🔑" name="authpw" class="txt-field" autofocus>
@@ -25,7 +25,7 @@
         <div v-else>
             <div v-if="!db" class="p-center center-content">
                 <h1 class="with-shadow">🔑 Decryption 📜</h1>
-                <div style="margin: 15px;" class="center-content">
+                <div class="center-content spaced">
                     <div>Key to decrypt the db:</div>
                     <form v-on:submit="decryptDB" action="/">
                         <input type="password" required spellcheck="false" placeholder="🔑" name="decryptpw" class="txt-field" autofocus>
@@ -92,9 +92,9 @@
                     </div>
                 </div>
                 <transition name="fade">
-                <div v-if="notification" class="notifications center-content">
-                    {{ notification }}
-                </div>
+                    <div v-if="notification" class="notifications center-content">
+                        {{ notification }}
+                    </div>
                 </transition>
             </div>
         </div>

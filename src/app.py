@@ -28,6 +28,10 @@ def getDropBoxToken():
     else:
         return None
 
+def setDropBoxToken(token):
+    with open(DPBX_TOKEN_FILE_PATH, "w") as fl:
+        fl.write(token)
+
 app = Flask(__name__)
 
 @app.route("/")
@@ -49,7 +53,31 @@ def setkey():
         if (isValid(body["key"]) and isValid(body["db"])):
             setKey(body["key"])
             writeDBFile(body["db"])
+            if (isValid(body["dpbxtoken"])):
+                setDropBoxToken(body["dpbxtoken"])
             return { "success": True }, 200
+        else:
+            return {
+                "success": False,
+                "error": "missing fields"
+            }, 400
+
+@app.route("/testdropboxtoken", methods=["POST"])
+def testdropboxtoken():
+    if (authKeyExists()):
+        return {
+            "success": False,
+            "error": "The key is already set"
+        }, 401
+    else:
+        body = request.get_json()
+        if (isValid(body["token"])):
+            try:
+                dbx = dropbox.Dropbox(body["token"])
+                dbx.users_get_current_account()
+                return { "valid": True }, 200
+            except:
+                return { "valid": False }, 200
         else:
             return {
                 "success": False,
@@ -88,7 +116,6 @@ def updatedb():
                 with open(DB_FILE_PATH, "rb") as f:
                     now_timestamp = datetime.now().strftime("%m-%d-%Y-%H:%M:%S")
                     meta = client.files_upload(f.read(), f"/Passwords-{now_timestamp}.ejp", mode=dropbox.files.WriteMode("overwrite"))
-                    print(meta)
             return {
                 "success": True
             }, 200
