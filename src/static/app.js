@@ -106,8 +106,8 @@ new Vue({
     },
     methods: {
         randomString(len, charSet) {
-            charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            let randomString = '';
+            charSet = charSet || "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            let randomString = "";
             for (let i = 0; i < len; i++) {
                 let randomPoz = Math.floor(Math.random() * charSet.length);
                 randomString += charSet.substring(randomPoz, randomPoz + 1);
@@ -265,7 +265,24 @@ new Vue({
             previewWindow.document.body.appendChild(frame);
         },
         copyText(text) {
+            this.showNotification("Text copied to clipboard");
             navigator.clipboard.writeText(text);
+        },
+        generateNewPassword(field) {
+            let charSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#!$%^&*()_+-=[]{}|;':,./<>?\"";
+            let newPassword = "";
+            let length = prompt("How many characters do you want your password to be?");
+            if (length && !isNaN(length) && length > 0) {
+                for (let i = 0; i < parseInt(length); i++) {
+                    let randomPoz = Math.floor(Math.random() * charSet.length);
+                    newPassword += charSet.substring(randomPoz, randomPoz + 1);
+                }
+                field.value = btoa(newPassword);
+                this.showNotification("Password generated");
+                this.updateDB();
+            } else if (length !== null) {
+                this.showNotification("Invalid password length");
+            }
         }
     }
 });

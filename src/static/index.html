@@ -68,6 +68,7 @@
                                     <div v-if="db[currentEntry].fields[field].type == 'file'" class="labolo ">{{ field }}</div>
                                     <input class="db-field" v-if="db[currentEntry].fields[field].type == 'text'" spellcheck="false " type="text" v-model="db[currentEntry].fields[field].value">
                                     <input class="db-field" v-if="db[currentEntry].fields[field].type == 'protected'" spellcheck="false " type="password" :value="'AAAAAAAAAAA'">
+                                    <button v-if="db[currentEntry].fields[field].type == 'protected'" @click="generateNewPassword(db[currentEntry].fields[field])" class="btn">🗝️</button>
                                     <div @click="previewFile(db[currentEntry].fields[field])" class="btn" v-if="db[currentEntry].fields[field].type == 'file'">
                                         {{ db[currentEntry].fields[field].fileName }} 📁
                                     </div>
