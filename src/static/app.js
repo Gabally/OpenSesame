@@ -93,16 +93,23 @@ Vue.component("add-field-form", {
 
 new Vue({
     el: "#app",
-    data: {
-        authenticated: false,
-        authPassword: null,
-        error: "",
-        rawDB: null,
-        showAddFieldMenu: false,
-        db: null,
-        currentEntry: null,
-        encPassword: null,
-        notification: null
+    data() {
+        return  {
+            authenticated: false,
+            authPassword: null,
+            error: "",
+            rawDB: null,
+            showAddFieldMenu: false,
+            db: null,
+            currentEntry: null,
+            encPassword: null,
+            notification: null,
+            showSidebar: false,
+            isMobile: false
+        }
+    },
+    mounted() {
+        this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     },
     methods: {
         randomString(len, charSet) {
@@ -167,6 +174,9 @@ new Vue({
         },
         viewEntry(name) {
             this.currentEntry = name;
+            if (this.isMobile) {
+                this.showSidebar = false;
+            }
         },
         forceFieldRender() {
             let c = this.currentEntry;
