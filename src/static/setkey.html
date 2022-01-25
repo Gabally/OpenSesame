@@ -17,9 +17,9 @@
             <div class="center-content spaced">
                 <form v-on:submit="setKey" class="center-content" action="/">
                     <div>KEY NOT SET. please set a new one now:</div>
-                    <input type="password" spellcheck="false" placeholder="🔑" name="key" class="txt-field" autofocus>
+                    <input type="password" spellcheck="false" placeholder="🔑" name="key" required class="txt-field" autofocus>
                     <div>DATABASE FILE NOT FOUND. please create new one with a new password:</div>
-                    <input type="password" spellcheck="false" placeholder="🔑" name="dbkey" class="txt-field">
+                    <input type="password" spellcheck="false" placeholder="🔑" name="dbkey" required class="txt-field">
                     <div>Dropbox token for backups (optional):</div>
                     <div>
                         <input type="text" spellcheck="false" placeholder="🎟️" name="dpbxtoken" class="txt-field">
@@ -28,6 +28,7 @@
                             {{ tokenTest }}
                         </div>
                     </div>
+                    <div class="error" v-if="error">{{ error }}</div>
                     <button type="submit" class="btn">OK</button>
                 </form>
             </div>

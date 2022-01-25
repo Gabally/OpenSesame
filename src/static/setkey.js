@@ -22,11 +22,11 @@ new Vue({
                     "Content-Type": "application/json"
                 }
             })).json();
-            let { success, message } = resp;
+            let { success, error } = resp;
             if (success) {
                 window.location.reload();
             } else {
-                this.error = message;
+                this.error = error;
             }
         },
         async testToken() {
