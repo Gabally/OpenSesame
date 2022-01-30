@@ -250,15 +250,9 @@ new Vue({
                 this.updateDB();
             }
         },
-        clearField(event) {
-            event.target.value = "";
-        },
-        placeholderSetField(event) {
-            event.target.value = "AAAAAAAAAAA";
-        },
         updatePasswordField(event, field) {
             let newPassword = btoa(event.target.value);
-            event.target.value = "AAAAAAAAAAA";
+            event.target.value = "";
             this.db[this.currentEntry].fields[field].value = newPassword;
             this.updateDB();
         },

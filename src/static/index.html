@@ -69,7 +69,7 @@
                                     <div v-if="db[currentEntry].fields[field].type == 'file'" class="labolo ">{{ field }}</div>
                                     <div class="field-data-m">
                                         <input class="db-field" v-if="db[currentEntry].fields[field].type == 'text'" @change="updateDB" spellcheck="false" type="text" v-model="db[currentEntry].fields[field].value">
-                                        <input class="db-field" v-if="db[currentEntry].fields[field].type == 'protected'" @focus="clearField" @change="updatePasswordField(event,field)" spellcheck="false " @focusout="placeholderSetField" type="password" :value="'AAAAAAAAAAA'">
+                                        <input class="db-field" v-if="db[currentEntry].fields[field].type == 'protected'"  @change="updatePasswordField(event,field)" spellcheck="false " type="password" placeholder="•••••••••••••••••">
                                         <div class="center-content" style="width: 100%;" v-if="db[currentEntry].fields[field].type == 'file'">
                                             <div @click="downloadFile(db[currentEntry].fields[field])" class="btn f-mobile" v-if="db[currentEntry].fields[field].type == 'file'">
                                                 {{ db[currentEntry].fields[field].fileName }} 📁
