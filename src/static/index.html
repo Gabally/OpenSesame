@@ -67,16 +67,20 @@
                                     <div v-if="db[currentEntry].fields[field].type == 'text'" @click="copyText(db[currentEntry].fields[field].value)" class="labolo ">{{ field }}</div>
                                     <div v-if="db[currentEntry].fields[field].type == 'protected'" @click="copyText(atob(db[currentEntry].fields[field].value))" class="labolo ">{{ field }}</div>
                                     <div v-if="db[currentEntry].fields[field].type == 'file'" class="labolo ">{{ field }}</div>
-                                    <input class="db-field" v-if="db[currentEntry].fields[field].type == 'text'" @change="updateDB" spellcheck="false" type="text" v-model="db[currentEntry].fields[field].value">
-                                    <input class="db-field" v-if="db[currentEntry].fields[field].type == 'protected'" @focus="this.value=''" spellcheck="false " type="password" :value="'AAAAAAAAAAA'">
-                                    <div @click="previewFile(db[currentEntry].fields[field])" class="btn" v-if="db[currentEntry].fields[field].type == 'file'">
-                                        {{ db[currentEntry].fields[field].fileName }} 📁
-                                    </div>
-                                    <div @click="deleteField(field)" class="del-field">
-                                        ❌
+                                    <div class="field-data-m">
+                                        <input class="db-field" v-if="db[currentEntry].fields[field].type == 'text'" @change="updateDB" spellcheck="false" type="text" v-model="db[currentEntry].fields[field].value">
+                                        <input class="db-field" v-if="db[currentEntry].fields[field].type == 'protected'" @focus="this.value=''" spellcheck="false " type="password" :value="'AAAAAAAAAAA'">
+                                        <div class="center-content" style="width: 100%;" v-if="db[currentEntry].fields[field].type == 'file'">
+                                            <div @click="downloadFile(db[currentEntry].fields[field])" class="btn f-mobile" v-if="db[currentEntry].fields[field].type == 'file'">
+                                                {{ db[currentEntry].fields[field].fileName }} 📁
+                                            </div>
+                                        </div>
+                                        <div @click="deleteField(field)" class="del-field">
+                                            ❌
+                                        </div>
                                     </div>
                                 </div>
-                                <div>
+                                <div style="margin-top: 10px;">
                                     <h5 class="faded">Created on {{ formatTimestamp(db[currentEntry].created) }}</h5>
                                 </div>
                                 <div class="center-content">

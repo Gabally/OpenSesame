@@ -196,6 +196,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: 10px;
 }
 
 .labolo {
@@ -214,6 +215,10 @@ body {
     opacity: 1;
 }
 
+.field-w-auto {
+    width: auto !important;
+}
+
 .db-field {
     border: 0px;
     margin: 4px;
@@ -223,7 +228,7 @@ body {
     border-radius: 3px;
     padding: 3px;
     outline: none;
-    width: 90%;
+    width: 100%;
     cursor: pointer;
 }
 
@@ -290,6 +295,7 @@ body {
     padding: 3px;
     border-radius: 50%;
     user-select: none;
+    text-align: center;
 }
 
 .del-field:hover {
@@ -319,6 +325,15 @@ body {
     display: none;
 }
 
+.field-data-m {
+    display: flex;
+    width: 100%;
+}
+
+.f-mobile {
+    text-align: center;
+}
+
 @media (max-width: 480px) {
     .entries {
         display: none;
@@ -339,5 +354,24 @@ body {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+    }
+    .field-input {
+        flex-direction: column;
+    }
+    .labolo {
+        margin: 5px;
+        width: 100%;
+        text-align: center;
+    }
+    .db-field {
+        text-align: center;
+    }
+    .del-field {
+        content: "X";
+        margin-left: 5px;
+    }
+    .f-mobile {
+        width: 100%;
+        text-align: center;
     }
 }

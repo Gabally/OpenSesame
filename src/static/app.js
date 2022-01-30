@@ -77,10 +77,10 @@ Vue.component("add-field-form", {
              <option value="file">File</option>
          </select>
          <label>Name:</label>
-         <input v-model="name" required class="db-field input-border" spellcheck="false "type="text">
+         <input v-model="name" required class="db-field input-border field-w-auto" spellcheck="false "type="text">
          <label>Value:</label>
-         <input v-model="value" v-if="type == 'text'" required class="db-field input-border" spellcheck="false "type="text">
-         <input v-model="value" v-if="type == 'protected'" required class="db-field input-border" spellcheck="false "type="password">
+         <input v-model="value" v-if="type == 'text'" required class="db-field input-border field-w-auto" spellcheck="false "type="text">
+         <input v-model="value" v-if="type == 'protected'" required class="db-field input-border field-w-auto" spellcheck="false "type="password">
          <label for="file-input" v-if="type == 'file'" class="btn">📁</label>
          <div v-if="type == 'file'" class="padded">{{ fileName }}</div>
          <input id="file-input" type="file" @change="encodeFile" ref="rawFile" name="uploaf" v-if="type == 'file'" style="opacity: 0;" required>
@@ -110,6 +110,9 @@ new Vue({
     },
     mounted() {
         this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        window.addEventListener("resize", () => {
+            this.isMobile = window.innerWidth <= 470;
+        });
     },
     methods: {
         randomString(len, charSet) {
@@ -263,19 +266,24 @@ new Vue({
                 this.error = "Could not decrypt the database";
             }
         },
-        previewFile(file) {
-            let previewWindow = window.open("about:blank", "_blank");
-            previewWindow.document.body.style.margin = "0px";
-            previewWindow.document.body.style.padding = "0px";
-            let frame = document.createElement("iframe");
-            frame.src = file.value;
-            frame.style.width = "100%";
-            frame.style.height = "100%";
-            frame.style.border = "none";
-            previewWindow.document.body.appendChild(frame);
+        downloadFile(file) {
+            let link = document.createElement("a");
+            link.href = file.value;
+            link.download = file.fileName;
+            link.click();
         },
         copyText(text) {
-            navigator.clipboard.writeText(text);
+            let tempInput = document.createElement("input");
+            tempInput.style = "position: absolute; left: -1000px; top: -1000px";
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text);
+            }
+            this.showNotification("Copied to the clipboard");
         }
     }
 });
