@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import Flask, render_template, request
+from flask import Flask, request
 from hashing import *
 from utils import *
 import os
@@ -22,6 +22,7 @@ def setkey():
         }, 401
     else:
         body = request.get_json()
+        print(body)
         if (isValid(body["key"]) and isValid(body["db"])):
             setKey(body["key"])
             writeDBFile(body["db"])

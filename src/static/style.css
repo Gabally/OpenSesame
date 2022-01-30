@@ -47,6 +47,7 @@ body {
 .error {
     text-align: center;
     color: rgb(194, 28, 28);
+    padding: 5px;
 }
 
 .btn {
@@ -195,6 +196,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: 10px;
 }
 
 .labolo {
@@ -213,6 +215,10 @@ body {
     opacity: 1;
 }
 
+.field-w-auto {
+    width: auto !important;
+}
+
 .db-field {
     border: 0px;
     margin: 4px;
@@ -222,7 +228,7 @@ body {
     border-radius: 3px;
     padding: 3px;
     outline: none;
-    width: 90%;
+    width: 100%;
     cursor: pointer;
 }
 
@@ -289,6 +295,7 @@ body {
     padding: 3px;
     border-radius: 50%;
     user-select: none;
+    text-align: center;
 }
 
 .del-field:hover {
@@ -312,4 +319,59 @@ body {
     left: 50%;
     transform: translateX(-50%);
     border: 1px solid black;
+}
+
+.mobile-helper {
+    display: none;
+}
+
+.field-data-m {
+    display: flex;
+    width: 100%;
+}
+
+.f-mobile {
+    text-align: center;
+}
+
+@media (max-width: 480px) {
+    .entries {
+        display: none;
+    }
+    .mobile-helper {
+        display: block;
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        width: 30px;
+        height: 30px;
+        z-index: 999999;
+    }
+    .msidebar {
+        display: flex !important;
+        width: 100vw;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .field-input {
+        flex-direction: column;
+    }
+    .labolo {
+        margin: 5px;
+        width: 100%;
+        text-align: center;
+    }
+    .db-field {
+        text-align: center;
+    }
+    .del-field {
+        content: "X";
+        margin-left: 5px;
+    }
+    .f-mobile {
+        width: 100%;
+        text-align: center;
+    }
 }
