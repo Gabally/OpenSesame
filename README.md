@@ -4,7 +4,7 @@ Small web-based password manager to store your credentials and access them anywh
 
 ## WARNING ⚠️
 
-This project was developed for fun in a few days, if you plan on using it you should take a look at the code as it's probably not very safe and should be trusted for super sensistive information.
+This project was developed for fun in a few days, if you plan on using it you should take a look at the code as it's probably not very safe and shouldn't be trusted for super sensistive information.
 
 ## Features
 - Store username/passwords/files encrypted
