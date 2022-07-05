@@ -28,6 +28,7 @@ def setkey():
             writeDBFile(body["db"])
             if (isValid(body["dpbxtoken"])):
                 setDropBoxToken(body["dpbxtoken"])
+            logAction(request, "Initialized the database")
             return { "success": True }, 200
         else:
             return {
@@ -62,11 +63,13 @@ def getdb():
     if (authKeyExists()):
         body = request.get_json()
         if (isValid(body["key"]) and verifyKey(body["key"])):
+            logAction(request, "Obtained the database file successfully")
             return {
                 "success": True,
                 "db": readDBFile()
             }, 200
         else:
+            logAction(request, "Submitted a wrong database password")
             return {
                 "success": False,
                 "error": "Wrong key"
@@ -89,10 +92,12 @@ def updatedb():
                 with open(DB_FILE_PATH, "rb") as f:
                     now_timestamp = datetime.now().strftime("%m-%d-%Y-%H:%M:%S")
                     meta = client.files_upload(f.read(), f"/Passwords-{now_timestamp}.ejp", mode=dropbox.files.WriteMode("overwrite"))
+            logAction(request, "Updated the database file successfully")
             return {
                 "success": True
             }, 200
         else:
+            logAction(request, "Tried to update the database with the wrong password")
             return {
                 "success": False,
                 "error": "Wrong key"

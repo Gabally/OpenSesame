@@ -4,3 +4,4 @@
 *.ejp
 **dpbxtoken.txt**
 .env
+**events.log**
