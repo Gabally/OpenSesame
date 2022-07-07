@@ -99,6 +99,7 @@ new Vue({
             authPassword: null,
             error: "",
             rawDB: null,
+            logs: "",
             showAddFieldMenu: false,
             db: null,
             currentEntry: null,
@@ -146,10 +147,11 @@ new Vue({
         async authenticate(e) {
             e.preventDefault();
             this.authPassword = new ProtectedValue(this.getFromTextField("authpw"));
-            let { success, error, db } = await this.postJSON("/getdb", { key: btoa(this.authPassword.get()) });
+            let { success, error, db, logs } = await this.postJSON("/getdb", { key: btoa(this.authPassword.get()) });
             if (success) {
                 this.authenticated = true;
                 this.rawDB = db;
+                this.logs = logs;
                 this.error = "";
             } else {
                 this.authPassword = null;
@@ -161,6 +163,10 @@ new Vue({
             setTimeout(() => {
                 this.notification = null;
             }, 3000);
+        },
+        openLogs() {
+            let blob = new Blob([this.logs], {type: "text/plain"});
+            window.open(URL.createObjectURL(blob), "_blank");
         },
         async updateDB() {
             let serialized = JSON.stringify(this.db);

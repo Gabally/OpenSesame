@@ -36,6 +36,11 @@
             <div v-else class="view">
                 <button class="btn mobile-helper center-content" @click="showSidebar = !showSidebar">👁️</button>
                 <div class="entries" v-bind:class="{ msidebar: showSidebar }">
+                    <div>
+                        <button @click="openLogs" class="btn logs-btn">
+                            Logs 📜
+                        </button>
+                    </div>
                     <div class="center-content r-flex" style="align-items: initial;">
                         <input class="search" placeholder="🔎" spellcheck="false" type="text">
                         <button class="add" @click="addEntry">

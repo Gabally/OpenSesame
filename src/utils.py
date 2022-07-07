@@ -49,3 +49,9 @@ def logAction(req, action):
                 fl.write("[{}]|{}|: {}\n".format(ip, datetime.now().strftime("%d-%m-%Y %H:%M:%S"), action))
     except Exception as e:
         print("Loggin error: {}".format(e))
+
+def readLogs():
+    if (not os.path.exists(LOGS_FILE_PATH)):
+        return ""
+    with open(LOGS_FILE_PATH, "r") as fl:
+        return fl.read()

@@ -66,7 +66,8 @@ def getdb():
             logAction(request, "Obtained the database file successfully")
             return {
                 "success": True,
-                "db": readDBFile()
+                "db": readDBFile(),
+                "logs": readLogs()
             }, 200
         else:
             logAction(request, "Submitted a wrong database password")

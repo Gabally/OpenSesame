@@ -375,3 +375,8 @@ body {
         text-align: center;
     }
 }
+
+.logs-btn {
+    margin-bottom: 3px;
+    width: 100%;
+}
