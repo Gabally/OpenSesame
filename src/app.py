@@ -13,6 +13,13 @@ def index():
     else:
         return app.send_static_file("setkey.html")
 
+@app.route("/2fa-secret")
+def mfa():
+    if (authKeyExists()):
+        return {}, 401
+    else:
+        return { "secret_url": pyotp.totp.TOTP(initMFA()).provisioning_uri(name="Login Token", issuer_name="Open Sesame") }
+
 @app.route("/init", methods=["POST"])
 def setkey():
     if (authKeyExists()):
@@ -22,7 +29,11 @@ def setkey():
         }, 401
     else:
         body = request.get_json()
-        print(body)
+        if not pyotp.TOTP(initMFA()).verify(body["mfa"]):
+            return {
+                "success": False,
+                "error": "Invalid 2FA token"
+            }, 400
         if (isValid(body["key"]) and isValid(body["db"])):
             setKey(body["key"])
             writeDBFile(body["db"])
@@ -62,7 +73,7 @@ def testdropboxtoken():
 def getdb():
     if (authKeyExists()):
         body = request.get_json()
-        if (isValid(body["key"]) and verifyKey(body["key"])):
+        if (isValid(body["key"]) and verifyKey(body["key"]) and pyotp.TOTP(initMFA()).verify(body["mfa"])):
             logAction(request, "Obtained the database file successfully")
             return {
                 "success": True,

@@ -147,7 +147,10 @@ new Vue({
         async authenticate(e) {
             e.preventDefault();
             this.authPassword = new ProtectedValue(this.getFromTextField("authpw"));
-            let { success, error, db, logs } = await this.postJSON("/getdb", { key: btoa(this.authPassword.get()) });
+            let { success, error, db, logs } = await this.postJSON("/getdb", {
+                key: btoa(this.authPassword.get()),
+                mfa: this.getFromTextField("mfa")
+            });
             if (success) {
                 this.authenticated = true;
                 this.rawDB = db;

@@ -4,6 +4,10 @@ new Vue({
         error: "",
         tokenTest: ""
     },
+    async mounted() {
+        let { secret_url } = await (await fetch("/2fa-secret")).json();
+        new QRCode(document.getElementById("qrcode"), secret_url);
+    },
     methods: {
         getFromTextField(name, erase = false) {
             let val = window.document.querySelector(`input[name="${name}"]`).value;
@@ -17,7 +21,12 @@ new Vue({
             let encDB = CryptoJS.AES.encrypt("{}", this.getFromTextField("dbkey"));
             let resp = await (await fetch("/init", {
                 method: "POST",
-                body: JSON.stringify({ key: btoa(this.getFromTextField("key")), db: encDB.toString(), dpbxtoken: this.getFromTextField("dpbxtoken") }),
+                body: JSON.stringify({ 
+                    key: btoa(this.getFromTextField("key")), 
+                    db: encDB.toString(), 
+                    dpbxtoken: this.getFromTextField("dpbxtoken"),
+                    mfa: this.getFromTextField("mfa")
+                }),
                 headers: {
                     "Content-Type": "application/json"
                 }

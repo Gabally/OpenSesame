@@ -28,6 +28,10 @@
                             {{ tokenTest }}
                         </div>
                     </div>
+                    <div>2FA QR Code (use Google Authenticator):</div>
+                    <div id="qrcode"></div>
+                    <div>Current 2FA Code:</div>
+                    <input type="text" spellcheck="false" placeholder="🔑" name="mfa" required class="txt-field">
                     <div class="error" v-if="error">{{ error }}</div>
                     <button type="submit" class="btn">OK</button>
                 </form>
@@ -35,6 +39,7 @@
         </div>
     </main>
 </body>
+<script src="/static/vendor/qrcode.min.js" type="text/javascript"></script>
 <script src="/static/vendor/crypto-js.js" type="text/javascript"></script>
 <script src="/static/vendor/vue.js" type="text/javascript"></script>
 <script src="/static/setkey.js" type="text/javascript"></script>
