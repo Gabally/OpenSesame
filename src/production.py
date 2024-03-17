@@ -1,9 +1,9 @@
 from gevent.pywsgi import WSGIServer
 from app import app
-from dotenv_config import Config
+from os import environ as enviroment_variables
 
-config = Config()
+listening_port = int(enviroment_variables.get("PORT", "5000"))
 
-print("Starting server on port %s" % (config("PORT", default=5000)))
-http_server = WSGIServer(("", config("PORT", conversion=int, default=5000)), app)
+print("Starting server on port %s" % (listening_port))
+http_server = WSGIServer(("", listening_port), app)
 http_server.serve_forever()
